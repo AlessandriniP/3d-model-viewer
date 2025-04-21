@@ -970,7 +970,7 @@
                     "id": "d8c0ba31-6804-4c5c-9610-1508d3457698",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "ScaleVector2(x=0.3,y=0.3)",
                     "groups": ";Keyboard&Mouse",
                     "action": "MoveMouse",
                     "isComposite": false,
