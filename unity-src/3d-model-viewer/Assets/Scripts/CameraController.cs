@@ -7,11 +7,12 @@ public class CameraController : MonoBehaviour
   [SerializeField] private Transform _cameraPivot;
 
   private const float _xRotationRange = 89f;
-  private const float _panSpeed = 3f;
+  private const float _panSpeed = 5f;
   private const float _resetViewSpeed = 0.2f;
-  private const float _scrollZoomSpeed = 0.3f;
+  private const float _scrollZoomSpeed = 100f;
+  private const float _mouseZoomSpeed = 50f;
   private const float _minZoomDist = 1f;
-  private const float _maxZoomDist = 25f;
+  private const float _maxZoomDist = 200f;
 
   private bool _resettingView;
 
@@ -53,20 +54,7 @@ public class CameraController : MonoBehaviour
       return;
     }
 
-    // calculate the direction from the camera to the target object
-    var directionToTarget = (_cameraPivot.position - transform.position).normalized;
-
-    // calculate the new position based on the scroll direction
-    var zoomAmount = direction.y * _scrollZoomSpeed;
-    var newPosition = transform.position + directionToTarget * zoomAmount;
-
-    // limit the distance between the camera and the target object
-    var distanceToTarget = Vector3.Distance(newPosition, _cameraPivot.position);
-
-    if (distanceToTarget >= _minZoomDist && distanceToTarget <= _maxZoomDist)
-    {
-      transform.position = newPosition;
-    }
+    ZoomCamera(direction, _scrollZoomSpeed);
   }
 
   private void OnMoveMouse(Vector2 axes)
@@ -84,6 +72,11 @@ public class CameraController : MonoBehaviour
     if (InputActionService.Instance.MiddleDrag)
     {
       PanCamera(axes);
+    }
+
+    if (InputActionService.Instance.RightDrag)
+    {
+      ZoomCamera(axes, _mouseZoomSpeed);
     }
   }
 
@@ -125,5 +118,23 @@ public class CameraController : MonoBehaviour
     // apply the movement
     transform.position += movement;
     _cameraPivot.position += movement;
+  }
+
+  private void ZoomCamera(Vector2 axes, float zoomSpeed)
+  {
+    // calculate the direction from the camera to the target object
+    var directionToTarget = (_cameraPivot.position - transform.position).normalized;
+
+    // calculate the new position based on the scroll direction
+    var zoomAmount = axes.y * zoomSpeed * Time.deltaTime;
+    var newPosition = transform.position + directionToTarget * zoomAmount;
+
+    // limit the distance between the camera and the target object
+    var distanceToTarget = Vector3.Distance(newPosition, _cameraPivot.position);
+
+    if (distanceToTarget >= _minZoomDist && distanceToTarget <= _maxZoomDist)
+    {
+      transform.position = newPosition;
+    }
   }
 }
