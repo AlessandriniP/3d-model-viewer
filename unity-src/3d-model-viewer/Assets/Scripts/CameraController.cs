@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
   [SerializeField] private Transform _cameraPivot;
+  [SerializeField] private Transform _defaultCamPose;
 
   private const float _xRotationRange = 89f;
   private const float _panSpeed = 5f;
@@ -16,24 +17,9 @@ public class CameraController : MonoBehaviour
 
   private bool _resettingView;
 
-  [Button]
-  private void ResetView()
+  private void Awake()
   {
-    // calculate the offset between the camera and the pivot
-    var offset = transform.position - _cameraPivot.position;
-
-    // move the pivot to the origin
-    _cameraPivot.DOMove(Vector3.zero, _resetViewSpeed).OnStart(() =>
-    {
-      _resettingView = true;
-    }).OnUpdate(() =>
-    {
-      // update the camera position to maintain the offset
-      transform.position = _cameraPivot.position + offset;
-    }).OnComplete(() =>
-    {
-      _resettingView = false;
-    });
+    transform.SetPositionAndRotation(_defaultCamPose.position, _defaultCamPose.rotation);
   }
 
   private void Start()
@@ -45,6 +31,31 @@ public class CameraController : MonoBehaviour
   private void Update()
   {
     transform.LookAt(_cameraPivot);
+  }
+
+  [Button]
+  public void ResetView()
+  {
+    // create a sequence to group the tweens
+    var resetViewSequence = DOTween.Sequence();
+
+    // add the pivot movement to the sequence
+    resetViewSequence.Join(_cameraPivot.DOMove(Vector3.zero, _resetViewSpeed));
+
+    // add the camera position and rotation to the sequence
+    resetViewSequence.Join(transform.DOMove(_defaultCamPose.position, _resetViewSpeed));
+    resetViewSequence.Join(transform.DORotateQuaternion(_defaultCamPose.rotation, _resetViewSpeed));
+
+    // set callbacks for the sequence
+    resetViewSequence.OnStart(() =>
+    {
+      _resettingView = true;
+    }).OnComplete(() =>
+    {
+      _resettingView = false;
+    });
+
+    resetViewSequence.Play();
   }
 
   private void OnScrollWheel(Vector2 direction)
