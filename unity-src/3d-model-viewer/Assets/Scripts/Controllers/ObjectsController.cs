@@ -1,5 +1,7 @@
+using DG.Tweening;
 using NaughtyAttributes;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ObjectsController : MonoBehaviour
@@ -7,7 +9,8 @@ public class ObjectsController : MonoBehaviour
   [SerializeField] private Transform _next;
   [SerializeField] private Transform _current;
   [SerializeField] private Transform _previous;
-  [SerializeField] private GameObject[] _allObjects; // going to be removed after gltf import
+  [SerializeField] private GameObject[] _allObjects; // TODO: going to be removed after gltf import
+  [SerializeField] private CameraController _cameraController;
 
   private readonly Stack<GameObject> _nextObjects = new();
   private readonly Stack<GameObject> _previousObjects = new();
@@ -23,29 +26,52 @@ public class ObjectsController : MonoBehaviour
 
   private void Awake()
   {
-    foreach (var obj in _allObjects)
+    for (var i = 0; i < _allObjects.Length; i++)
     {
-      var gameObject = Instantiate(obj, Vector3.zero, Quaternion.identity, transform);
-      gameObject.SetActive(false);
+      var position = i == _allObjects.Length - 1 ? _current.position : _next.position;
+      var active = i == _allObjects.Length - 1;
+      var gameObject = Instantiate(_allObjects[i], position, Quaternion.identity, transform);
+
+      gameObject.SetActive(active);
       _nextObjects.Push(gameObject);
     }
 
-    ActivateObject(_nextObjects, _previousObjects, ObjectHistory.Next);
+    ProcessObject(_nextObjects, _previousObjects, ObjectHistory.Next);
   }
 
+  [EnableIf(nameof(_canGoNext))]
   [Button]
   public void ShowNextObject()
   {
-    ActivateObject(_nextObjects, _previousObjects, ObjectHistory.Next);
+    if (_cameraController.LockedView || !_canGoNext)
+    {
+      return;
+    }
+
+    MoveObjectIn(
+    _nextObjects.First(), _current.position,
+    _currentObject, _previous.position,
+    _nextObjects, _previousObjects, ObjectHistory.Next
+);
   }
 
+  [EnableIf(nameof(_canGoPrevious))]
   [Button]
   public void ShowPreviousObject()
   {
-    ActivateObject(_previousObjects, _nextObjects, ObjectHistory.Previous);
+    if (_cameraController.LockedView || !_canGoPrevious)
+    {
+      return;
+    }
+
+    MoveObjectIn(
+    _previousObjects.First(), _current.position,
+    _currentObject, _next.position,
+    _previousObjects, _nextObjects, ObjectHistory.Previous
+);
   }
 
-  private void ActivateObject(Stack<GameObject> fromStack, Stack<GameObject> toStack, ObjectHistory history)
+  private void ProcessObject(Stack<GameObject> fromStack, Stack<GameObject> toStack, ObjectHistory history)
   {
     if (fromStack.Count > 0)
     {
@@ -55,8 +81,6 @@ public class ObjectsController : MonoBehaviour
       }
 
       var obj = fromStack.Pop();
-      obj.SetActive(true);
-      _currentObject?.SetActive(false);
       _currentObject = obj;
     }
 
@@ -77,5 +101,28 @@ public class ObjectsController : MonoBehaviour
     }
 
     // TODO: call javascript function to set _canGoNext and _canGoPrevious
+  }
+
+  private void MoveObjectIn(
+      GameObject moveInObject, Vector3 moveInTarget,
+      GameObject moveOutObject, Vector3 moveOutTarget,
+      Stack<GameObject> fromStack, Stack<GameObject> toStack, ObjectHistory history)
+  {
+    var moveSequence = DOTween.Sequence();
+
+    moveSequence.Join(moveInObject.transform.DOMove(moveInTarget, _cameraController.ResetViewSpeed));
+    moveSequence.Join(moveOutObject.transform.DOMove(moveOutTarget, _cameraController.ResetViewSpeed));
+
+    moveSequence.OnStart(() =>
+    {
+      _cameraController.ResetView();
+      moveInObject.SetActive(true);
+    }).OnComplete(() =>
+    {
+      moveOutObject.SetActive(false);
+      ProcessObject(fromStack, toStack, history);
+    });
+
+    moveSequence.Play();
   }
 }
