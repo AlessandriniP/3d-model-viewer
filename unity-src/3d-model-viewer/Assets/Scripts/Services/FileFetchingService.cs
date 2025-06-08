@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class FileFetchingService : Singleton<FileFetchingService>
 {
-  public event Action<List<KeyValuePair<string, string>>> FetchFilePaths;
+  public event Action<string[]> FetchFilePaths;
 
   [field: SerializeField] public string BaseFetchingUrl { get; private set; }
-  [field: SerializeField] public string ModelBaseFolderName { get; private set; }
+  [field: SerializeField] public string ModelBaseFolderPath { get; private set; }
   [field: SerializeField] public string ModelJsonFileName { get; private set; }
 
   protected override void Awake()
@@ -31,14 +30,11 @@ public class FileFetchingService : Singleton<FileFetchingService>
         var fileText = webRequest.downloadHandler.text;
         var json = JsonUtility.FromJson<ModelFileNames>(fileText);
         var modelNames = json.model_names;
-        var filePaths = new List<KeyValuePair<string, string>>();
+        var filePaths = new string[modelNames.Length];
 
-        foreach (var modelName in modelNames)
+        for (var i = 0; i < modelNames.Length; i++)
         {
-          var blendFile = $"{BaseFetchingUrl}{ModelBaseFolderName}{modelName}/{modelName}.blend";
-          var glbFile = $"{BaseFetchingUrl}{ModelBaseFolderName}{modelName}/{modelName}.glb";
-
-          filePaths.Add(new KeyValuePair<string, string>(blendFile, glbFile));
+          filePaths[i] = $"{BaseFetchingUrl}{ModelBaseFolderPath}{modelNames[i]}.glb";
         }
 
         FetchFilePaths?.Invoke(filePaths);

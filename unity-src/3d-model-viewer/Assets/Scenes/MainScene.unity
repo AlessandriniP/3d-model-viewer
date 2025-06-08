@@ -718,7 +718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BaseFetchingUrl>k__BackingField: https://github.com/AlessandriniP/3d-model-viewer/tree/models/
-  <ModelBaseFolderName>k__BackingField: models
+  <ModelBaseFolderPath>k__BackingField: models/
   <ModelJsonFileName>k__BackingField: model-overview.json
 --- !u!1 &981305355
 GameObject:
