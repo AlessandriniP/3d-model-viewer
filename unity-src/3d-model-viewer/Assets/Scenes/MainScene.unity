@@ -538,11 +538,6 @@ MonoBehaviour:
   _next: {fileID: 306726444}
   _current: {fileID: 981305356}
   _previous: {fileID: 60766601}
-  _allObjects:
-  - {fileID: 8171025495769493557, guid: b7adc7939ef8e4c4e9dc5f643c301553, type: 3}
-  - {fileID: 1878637586329185337, guid: 8d26870cef1dad140b9ae6463ccc56f9, type: 3}
-  - {fileID: 6772069481472017006, guid: 26a3b482c6062724aa510dd9f604dad8, type: 3}
-  - {fileID: 6366002424508632049, guid: 228eff075e070b3419dfe8f7e0493f9b, type: 3}
   _cameraController: {fileID: 330585548}
 --- !u!1 &587468578
 GameObject:
@@ -689,7 +684,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &867781707
 Transform:
   m_ObjectHideFlags: 0
@@ -717,9 +712,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529f83811bcdfa84e9c22bed805a9905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseFetchingUrl>k__BackingField: https://github.com/AlessandriniP/3d-model-viewer/tree/models/
-  <ModelBaseFolderPath>k__BackingField: models/
+  <BaseFetchingUrl>k__BackingField: C:\Users\Phili\OS\Modelling\
   <ModelJsonFileName>k__BackingField: model-overview.json
+  <ModelBaseFolderPath>k__BackingField: models\
 --- !u!1 &981305355
 GameObject:
   m_ObjectHideFlags: 0
@@ -783,6 +778,7 @@ Transform:
   m_Children:
   - {fileID: 603147494}
   - {fileID: 867781707}
+  - {fileID: 1465736612}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1091408648
@@ -797,6 +793,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b696f9510cf45704a916fea98830678e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1465736611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1465736612}
+  - component: {fileID: 1465736613}
+  m_Layer: 0
+  m_Name: GltfImporterService
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1465736612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465736611}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1091408647}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1465736613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465736611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0b3fdab884d0e47b30a2a26b72f8e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gltfObject: {fileID: 5638514277736299133, guid: 1b4c575162201014b8fa960c2a1c4802, type: 3}
+  _objectParent: {fileID: 584115018}
 --- !u!1 &2083680601
 GameObject:
   m_ObjectHideFlags: 0

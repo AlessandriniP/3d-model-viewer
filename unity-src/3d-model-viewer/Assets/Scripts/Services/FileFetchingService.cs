@@ -1,49 +1,73 @@
 using System;
 using System.Collections;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class FileFetchingService : Singleton<FileFetchingService>
 {
-  public event Action<string[]> FetchFilePaths;
-
   [field: SerializeField] public string BaseFetchingUrl { get; private set; }
-  [field: SerializeField] public string ModelBaseFolderPath { get; private set; }
   [field: SerializeField] public string ModelJsonFileName { get; private set; }
+  [field: SerializeField] public string ModelBaseFolderPath { get; private set; }
 
-  protected override void Awake()
+  private void Start()
   {
-    base.Awake();
-
-    StartCoroutine(FetchJson());
+    StartCoroutine(FetchJson(fetchLocal: true));
   }
 
-  private IEnumerator FetchJson()
+  private IEnumerator FetchJson(bool fetchLocal)
   {
-    using (UnityWebRequest webRequest = UnityWebRequest.Get(BaseFetchingUrl + ModelJsonFileName))
+    var fileText = String.Empty;
+
+    if (fetchLocal)
     {
+      var filePath = Path.Combine(BaseFetchingUrl, ModelJsonFileName);
+
+      if (!File.Exists(filePath))
+      {
+        Debug.LogError($"Local file not found: {filePath}");
+
+        yield break;
+      }
+
+      fileText = File.ReadAllText(filePath);
+    }
+    else
+    {
+      using var webRequest = UnityWebRequest.Get($"{BaseFetchingUrl}{ModelJsonFileName}");
 
       yield return webRequest.SendWebRequest();
 
       if (webRequest.result == UnityWebRequest.Result.Success)
       {
-        var fileText = webRequest.downloadHandler.text;
-        var json = JsonUtility.FromJson<ModelFileNames>(fileText);
-        var modelNames = json.model_names;
-        var filePaths = new string[modelNames.Length];
-
-        for (var i = 0; i < modelNames.Length; i++)
-        {
-          filePaths[i] = $"{BaseFetchingUrl}{ModelBaseFolderPath}{modelNames[i]}.glb";
-        }
-
-        FetchFilePaths?.Invoke(filePaths);
+        fileText = webRequest.downloadHandler.text;
       }
       else
       {
-        Debug.LogError("Error fetching JSON from " + BaseFetchingUrl
-          + ModelJsonFileName + ": " + webRequest.error);
+        Debug.LogError($"Error while fetching the remote file: " +
+          $"{BaseFetchingUrl}{ModelJsonFileName} - {webRequest.error}");
+
+        yield break;
       }
     }
+
+    if (string.IsNullOrEmpty(fileText))
+    {
+      yield break;
+    }
+
+    var json = JsonUtility.FromJson<ModelFileNames>(fileText);
+
+    if (json?.model_names == null)
+    {
+      yield break;
+    }
+
+    var filePaths = json.model_names
+        .Select(name => $"{BaseFetchingUrl}{ModelBaseFolderPath}{name}.glb")
+        .ToArray();
+
+    GltfImporterService.Instance.ImportGltfModelsFrom(filePaths);
   }
 }

@@ -3,17 +3,19 @@ using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityGLTF;
 
 public class ObjectsController : MonoBehaviour
 {
   [SerializeField] private Transform _next;
   [SerializeField] private Transform _current;
   [SerializeField] private Transform _previous;
-  [SerializeField] private GameObject[] _allObjects; // TODO: going to be removed after gltf import
   [SerializeField] private CameraController _cameraController;
 
   private readonly Stack<GameObject> _nextObjects = new();
   private readonly Stack<GameObject> _previousObjects = new();
+
+  private GameObject[] _allObjects;
   private GameObject _currentObject;
   private bool _canGoNext;
   private bool _canGoPrevious;
@@ -26,17 +28,7 @@ public class ObjectsController : MonoBehaviour
 
   private void Awake()
   {
-    for (var i = 0; i < _allObjects.Length; i++)
-    {
-      var position = i == _allObjects.Length - 1 ? _current.position : _next.position;
-      var active = i == _allObjects.Length - 1;
-      var gameObject = Instantiate(_allObjects[i], position, Quaternion.identity, transform);
-
-      gameObject.SetActive(active);
-      _nextObjects.Push(gameObject);
-    }
-
-    ProcessObject(_nextObjects, _previousObjects, ObjectHistory.Next);
+    GltfImporterService.Instance.GltfObjectsImported += OnGltfObjectsImported;
   }
 
   [EnableIf(nameof(_canGoNext))]
@@ -71,6 +63,15 @@ public class ObjectsController : MonoBehaviour
 );
   }
 
+  // TODO: a javascript function can call this get the URI of the current object
+  [Button]
+  public void GetCurrentObjectUri()
+  {
+    var uri = _currentObject?.GetComponent<GLTFComponent>().GLTFUri;
+
+    Debug.Log($"Current Object URI: {uri}");
+  }
+
   private void ProcessObject(Stack<GameObject> fromStack, Stack<GameObject> toStack, ObjectHistory history)
   {
     if (fromStack.Count > 0)
@@ -100,7 +101,7 @@ public class ObjectsController : MonoBehaviour
       _canGoNext = toStack.Count > 0;
     }
 
-    // TODO: call javascript function to set _canGoNext and _canGoPrevious
+    // TODO: call javascript function here to set _canGoNext and _canGoPrevious for ui
   }
 
   private void MoveObjectIn(
@@ -124,5 +125,22 @@ public class ObjectsController : MonoBehaviour
     });
 
     moveSequence.Play();
+  }
+
+  private void OnGltfObjectsImported(GameObject[] objects)
+  {
+    _allObjects = objects;
+
+    for (var i = 0; i < _allObjects.Length; i++)
+    {
+      var position = i == _allObjects.Length - 1 ? _current.position : _next.position;
+      var active = i == _allObjects.Length - 1;
+
+      _allObjects[i].transform.position = position;
+      _allObjects[i].SetActive(active);
+      _nextObjects.Push(_allObjects[i]);
+    }
+
+    ProcessObject(_nextObjects, _previousObjects, ObjectHistory.Next);
   }
 }
