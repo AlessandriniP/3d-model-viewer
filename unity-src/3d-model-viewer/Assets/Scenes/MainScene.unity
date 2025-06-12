@@ -837,6 +837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0b3fdab884d0e47b30a2a26b72f8e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _objectsController: {fileID: 584115019}
   _gltfObject: {fileID: 5638514277736299133, guid: 1b4c575162201014b8fa960c2a1c4802, type: 3}
   _objectParent: {fileID: 584115018}
 --- !u!1 &2083680601

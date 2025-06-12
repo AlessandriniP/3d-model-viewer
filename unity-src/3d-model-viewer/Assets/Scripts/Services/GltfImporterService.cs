@@ -4,8 +4,7 @@ using UnityGLTF;
 
 public class GltfImporterService : Singleton<GltfImporterService>
 {
-  public event Action<GameObject[]> GltfObjectsImported;
-
+  [SerializeField] private ObjectsController _objectsController;
   [SerializeField] private GameObject _gltfObject;
   [SerializeField] private Transform _objectParent;
 
@@ -25,6 +24,6 @@ public class GltfImporterService : Singleton<GltfImporterService>
       objects[i] = obj;
     }
 
-    GltfObjectsImported?.Invoke(objects);
+    _objectsController.ProcessGltfObjects(objects);
   }
 }

@@ -26,11 +26,6 @@ public class ObjectsController : MonoBehaviour
     Previous
   }
 
-  private void Awake()
-  {
-    GltfImporterService.Instance.GltfObjectsImported += OnGltfObjectsImported;
-  }
-
   [EnableIf(nameof(_canGoNext))]
   [Button]
   public void ShowNextObject()
@@ -70,6 +65,23 @@ public class ObjectsController : MonoBehaviour
     var uri = _currentObject?.GetComponent<GLTFComponent>().GLTFUri;
 
     Debug.Log($"Current Object URI: {uri}");
+  }
+
+  public void ProcessGltfObjects(GameObject[] objects)
+  {
+    _allObjects = objects;
+
+    for (var i = 0; i < _allObjects.Length; i++)
+    {
+      var position = i == _allObjects.Length - 1 ? _current.position : _next.position;
+      var active = i == _allObjects.Length - 1;
+
+      _allObjects[i].transform.position = position;
+      _allObjects[i].SetActive(active);
+      _nextObjects.Push(_allObjects[i]);
+    }
+
+    ProcessObject(_nextObjects, _previousObjects, ObjectHistory.Next);
   }
 
   private void ProcessObject(Stack<GameObject> fromStack, Stack<GameObject> toStack, ObjectHistory history)
@@ -125,22 +137,5 @@ public class ObjectsController : MonoBehaviour
     });
 
     moveSequence.Play();
-  }
-
-  private void OnGltfObjectsImported(GameObject[] objects)
-  {
-    _allObjects = objects;
-
-    for (var i = 0; i < _allObjects.Length; i++)
-    {
-      var position = i == _allObjects.Length - 1 ? _current.position : _next.position;
-      var active = i == _allObjects.Length - 1;
-
-      _allObjects[i].transform.position = position;
-      _allObjects[i].SetActive(active);
-      _nextObjects.Push(_allObjects[i]);
-    }
-
-    ProcessObject(_nextObjects, _previousObjects, ObjectHistory.Next);
   }
 }
