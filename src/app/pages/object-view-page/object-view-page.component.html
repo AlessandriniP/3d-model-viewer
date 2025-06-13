@@ -1,1 +1,5 @@
-<app-unity-canvas></app-unity-canvas>
+<app-unity-canvas (canvasReady)="setCanvasReady()"></app-unity-canvas>
+
+@if (canvasReady) {
+  <app-canvas-controls></app-canvas-controls>
+}

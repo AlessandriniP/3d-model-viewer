@@ -1,0 +1,22 @@
+<div class="historyButtonContainer">
+  <button class="historyButton" (click)="previousObject()">
+    <mat-icon class="chevronIcon">chevron_left</mat-icon>
+  </button>
+  <button class="historyButton" (click)="nextObject()">
+    <mat-icon class="chevronIcon">chevron_right</mat-icon>
+  </button>
+</div>
+
+<div class="sideMenuContainer">
+  <button class="sideMenuButton" (click)="focusObject()">
+    <mat-icon class="sideMenuIcon">view_in_ar</mat-icon>
+  </button>
+  <mat-divider class="sideMenuDivider"/>
+  <button class="sideMenuButton" (click)="downloadObject()">
+    <mat-icon class="sideMenuIcon">download</mat-icon>
+  </button>
+  <mat-divider class="sideMenuDivider"/>
+  <button class="sideMenuButton" (click)="openProjectSource()">
+    <mat-icon class="sideMenuIcon">code</mat-icon>
+  </button>
+</div>

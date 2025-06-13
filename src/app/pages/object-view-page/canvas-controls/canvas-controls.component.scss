@@ -1,0 +1,95 @@
+$container-margin: 24px;
+$button-size: 56px;
+$button-text-color: #004f4e;
+$button-hover-color: #18a29e;
+$button-active-color: #147f7c;
+$menu-container-blur: blur(12px);
+
+// --- history buttons ---
+
+.historyButtonContainer {
+  position: fixed;
+  left: 50%;
+  bottom: $container-margin;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 5;
+}
+
+.historyButton {
+  width: $button-size;
+  height: $button-size;
+  background: #22cfcb;
+  color: $button-text-color;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+.historyButton:hover {
+  background: $button-hover-color;
+}
+
+.historyButton:active {
+  background: $button-active-color;
+}
+
+.chevronIcon {
+  transform: scale(1.35);
+}
+
+// --- side menu ---
+
+.sideMenuContainer {
+  position: fixed;
+  right: $container-margin;
+  bottom: $container-margin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(34, 207, 203, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
+  padding: 4px;
+  z-index: 3;
+  backdrop-filter: $menu-container-blur;
+  -webkit-backdrop-filter: $menu-container-blur;
+}
+
+.sideMenuButton {
+  color: $button-text-color;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  width: $button-size;
+  height: $button-size;
+  cursor: pointer;
+}
+
+.sideMenuButton:hover {
+  background: $button-hover-color;
+}
+
+.sideMenuButton:active {
+  background: $button-active-color;
+}
+
+.sideMenuDivider {
+  width: 80%;
+  height: 1px;
+  background: #009a98;
+  margin: 4px 0;
+}
+
+.sideMenuIcon {
+  transform: scale(1.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
