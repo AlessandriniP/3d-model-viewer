@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Signal, input, output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Signal, ViewChild, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-unity-canvas',
@@ -7,6 +7,8 @@ import { AfterViewInit, Component, Signal, input, output } from '@angular/core';
   styleUrl: './unity-canvas.component.scss'
 })
 export class UnityCanvasComponent implements AfterViewInit {
+  @ViewChild('unityCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+
   canvasReady = output<void>();
 
   readonly unityCanvasId = 'unity-canvas';
@@ -15,6 +17,8 @@ export class UnityCanvasComponent implements AfterViewInit {
   private unityInstance: any; // TODO: use this to send messages to Unity
 
   ngAfterViewInit(): void {
+    const unityCanvas = this.canvasRef.nativeElement;
+
     try {
       // @ts-ignore
       createUnityInstance(document.querySelector(`#${this.unityCanvasId}`), {
@@ -26,6 +30,7 @@ export class UnityCanvasComponent implements AfterViewInit {
         productName: '3d-model-viewer',
         productVersion: '1.0'
       }).then((instance: any) => {
+        unityCanvas.style.cursor = 'crosshair';
         this.unityInstance = instance;
         this.canvasReady.emit();
       });
