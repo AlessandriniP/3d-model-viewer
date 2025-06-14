@@ -7,8 +7,8 @@
 .toolbar {
   position: relative;
   z-index: 10;
-  height: 56px;
-  min-height: 56px;
+  height: var(--toolbar-height);
+  min-height: var(--toolbar-height);
   background: #004f4f;
   color: #00dddd;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
