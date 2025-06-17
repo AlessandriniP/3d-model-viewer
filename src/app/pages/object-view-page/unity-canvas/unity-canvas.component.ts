@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Signal, ViewChild, input, output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Signal, ViewChild, inject, input, output } from '@angular/core';
+import { UnityCommunicatorService } from '../../../services/unity-communicator.service';
 
 @Component({
   selector: 'app-unity-canvas',
@@ -14,7 +15,7 @@ export class UnityCanvasComponent implements AfterViewInit {
   readonly unityCanvasId = 'unity-canvas';
   readonly unityBuildPath = 'unity-build/unity-build';
 
-  private unityInstance: any; // TODO: use this to send messages to Unity
+  private readonly unityCommunicatorService = inject(UnityCommunicatorService);
 
   ngAfterViewInit(): void {
     const unityCanvas = this.canvasRef.nativeElement;
@@ -31,7 +32,7 @@ export class UnityCanvasComponent implements AfterViewInit {
         productVersion: '1.0'
       }).then((instance: any) => {
         unityCanvas.style.cursor = 'crosshair';
-        this.unityInstance = instance;
+        this.unityCommunicatorService.unityInstance = instance;
         this.canvasReady.emit();
       });
     }

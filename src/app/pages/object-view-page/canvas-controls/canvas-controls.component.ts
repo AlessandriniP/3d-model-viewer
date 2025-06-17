@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { UnityCommunicatorService } from '../../../services/unity-communicator.service';
 
 @Component({
   selector: 'app-canvas-controls',
@@ -10,16 +11,18 @@ import { MatDividerModule } from '@angular/material/divider';
   styleUrl: './canvas-controls.component.scss'
 })
 export class CanvasControlsComponent {
+  private readonly unityCommunicatorService = inject(UnityCommunicatorService);
+
   previousObject(): void {
-    console.log('Show previous object');
+    this.unityCommunicatorService.showPreviousObject();
   }
 
   nextObject(): void {
-    console.log('Show next object');
+    this.unityCommunicatorService.showNextObject();
   }
 
   focusObject(): void {
-    console.log('Focus on the current object');
+    this.unityCommunicatorService.resetView();
   }
 
   downloadObject(): void {
