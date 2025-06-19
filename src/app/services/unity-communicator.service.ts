@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,13 @@ export class UnityCommunicatorService {
 
   private _unityInstance: any;
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      (window as any).onUnityMessage = (message: string) => {
+        this.handleUnityMessage(message);
+      };
+    }
+  }
   set unityInstance(instance: any) {
     this._unityInstance = instance;
   }
@@ -34,5 +42,9 @@ export class UnityCommunicatorService {
     } else {
       console.error('Unity instance is not initialized. Cannot reset camera view.');
     }
+  }
+
+  private handleUnityMessage(message: string): void {
+    console.log('Received message from Unity:', message);
   }
 }
