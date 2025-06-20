@@ -1,9 +1,17 @@
 mergeInto(LibraryManager.library, {
-  SendMessageToWeb: function(messagePtr) {
-    var message = UTF8ToString(messagePtr);
+  CanShowPreviousObject: function(paramPtr, value) {
+    var param = UTF8ToString(paramPtr);
 
     if (typeof window.onUnityMessage === "function") {
-      window.onUnityMessage(message);
+      window.onUnityMessage(param, value);
+    }
+  },
+
+  CanShowNextObject: function(paramPtr, value) {
+    var param = UTF8ToString(paramPtr);
+
+    if (typeof window.onUnityMessage === "function") {
+      window.onUnityMessage(param, value);
     }
   },
 });

@@ -3,6 +3,8 @@ $button-size: 56px;
 $button-text-color: #004f4e;
 $button-hover-color: #18a29e;
 $button-active-color: #147f7c;
+$button-disabled-color: #292e2d;
+$button-text-disabled-color: #6e7372;
 $menu-container-blur: blur(12px);
 
 // --- history buttons ---
@@ -29,14 +31,6 @@ $menu-container-blur: blur(12px);
   justify-content: center;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
   cursor: pointer;
-}
-
-.historyButton:hover {
-  background: $button-hover-color;
-}
-
-.historyButton:active {
-  background: $button-active-color;
 }
 
 .chevronIcon {
@@ -71,12 +65,25 @@ $menu-container-blur: blur(12px);
   cursor: pointer;
 }
 
+.historyButton:hover,
 .sideMenuButton:hover {
   background: $button-hover-color;
 }
 
+.historyButton:active,
 .sideMenuButton:active {
   background: $button-active-color;
+}
+
+.historyButton:disabled,
+.historyButton:disabled:hover,
+.historyButton:disabled:active,
+.sideMenuButton:disabled,
+.sideMenuButton:disabled:hover,
+.sideMenuButton:disabled:active {
+  background: $button-disabled-color;
+  color: $button-text-disabled-color;
+  cursor: default;
 }
 
 .sideMenuDivider {

@@ -17,8 +17,9 @@ public class ObjectsController : MonoBehaviour
 
   private GameObject[] _allObjects;
   private GameObject _currentObject;
-  private bool _canGoNext;
-  private bool _canGoPrevious;
+
+  public bool CanGoPrevious { get; private set; }
+  public bool CanGoNext { get; private set; }
 
   private enum ObjectHistory
   {
@@ -26,11 +27,11 @@ public class ObjectsController : MonoBehaviour
     Previous
   }
 
-  [EnableIf(nameof(_canGoNext))]
+  [EnableIf(nameof(CanGoNext))]
   [Button]
   public void ShowNextObject()
   {
-    if (_cameraController.LockedView || !_canGoNext)
+    if (_cameraController.LockedView || !CanGoNext)
     {
       return;
     }
@@ -42,11 +43,11 @@ public class ObjectsController : MonoBehaviour
 );
   }
 
-  [EnableIf(nameof(_canGoPrevious))]
+  [EnableIf(nameof(CanGoPrevious))]
   [Button]
   public void ShowPreviousObject()
   {
-    if (_cameraController.LockedView || !_canGoPrevious)
+    if (_cameraController.LockedView || !CanGoPrevious)
     {
       return;
     }
@@ -104,13 +105,13 @@ public class ObjectsController : MonoBehaviour
   {
     if (history == ObjectHistory.Next)
     {
-      _canGoNext = fromStack.Count > 0;
-      _canGoPrevious = toStack.Count > 0;
+      CanGoNext = fromStack.Count > 0;
+      CanGoPrevious = toStack.Count > 0;
     }
     else
     {
-      _canGoPrevious = fromStack.Count > 0;
-      _canGoNext = toStack.Count > 0;
+      CanGoPrevious = fromStack.Count > 0;
+      CanGoNext = toStack.Count > 0;
     }
 
     // TODO: call javascript function here to set _canGoNext and _canGoPrevious for ui

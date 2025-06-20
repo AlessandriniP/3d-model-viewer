@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 public class WebCommunicatorService : Singleton<WebCommunicatorService>
 {
@@ -7,30 +7,38 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
   [SerializeField] private CameraController _cameraController;
 
   [DllImport("__Internal")]
-  private static extern void SendMessageToWeb(string message);
+  private static extern void CanShowPreviousObject(string param, int value);
+  [DllImport("__Internal")]
+  private static extern void CanShowNextObject(string param, int value);
 
   private void Start()
   {
 #if UNITY_WEBGL && !UNITY_EDITOR
-    SendMessageToWeb("Hello from Unity WebGL!");
+    CanShowPreviousObject("CanGoPrevious", _objectsController.CanGoPrevious ? 1 : 0);
+    CanShowNextObject("CanGoNext", _objectsController.CanGoNext ? 1 : 0);
+#endif
+  }
+
+  public void OnShowPreviousObject()
+  {
+    _objectsController.ShowPreviousObject();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+     CanShowPreviousObject("CanGoPrevious", _objectsController.CanGoPrevious ? 1 : 0);
 #endif
   }
 
   public void OnShowNextObject()
   {
-    //_objectsController.ShowNextObject();
-    Debug.Log("Next object requested.");
-  }
+    _objectsController.ShowNextObject();
 
-  public void OnShowPreviousObject()
-  {
-    //_objectsController.ShowPreviousObject();
-    Debug.Log("Previous object requested.");
+#if UNITY_WEBGL && !UNITY_EDITOR
+     CanShowNextObject("CanGoNext", _objectsController.CanGoNext ? 1 : 0);
+#endif
   }
 
   public void OnResetView()
   {
-    //_cameraController.ResetView();
-    Debug.Log("Reset camera view.");
+    _cameraController.ResetView();
   }
 }

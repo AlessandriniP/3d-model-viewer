@@ -1,8 +1,8 @@
 <div class="historyButtonContainer">
-  <button class="historyButton" (click)="previousObject()">
+  <button #showPreviousBtn class="historyButton" (click)="previousObject()">
     <mat-icon class="chevronIcon">chevron_left</mat-icon>
   </button>
-  <button class="historyButton" (click)="nextObject()">
+  <button #showNextBtn class="historyButton" (click)="nextObject()">
     <mat-icon class="chevronIcon">chevron_right</mat-icon>
   </button>
 </div>

@@ -1,21 +1,26 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnityCommunicatorService {
+  canShowPreviousObject = new BehaviorSubject<boolean>(false);
+  canShowNextObject = new BehaviorSubject<boolean>(false);
+
   private readonly communicatorServiceName = 'WebCommunicatorService';
 
   private _unityInstance: any;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
-      (window as any).onUnityMessage = (message: string) => {
-        this.handleUnityMessage(message);
+      (window as any).onUnityMessage = (param: string, value: number) => {
+        this.handleUnityMessage(param, value);
       };
     }
   }
+
   set unityInstance(instance: any) {
     this._unityInstance = instance;
   }
@@ -44,7 +49,16 @@ export class UnityCommunicatorService {
     }
   }
 
-  private handleUnityMessage(message: string): void {
-    console.log('Received message from Unity:', message);
+  private handleUnityMessage(param: string, value: number): void {
+    switch (param) {
+      case 'CanGoPrevious':
+        this.canShowPreviousObject.next(value === 1);
+        break;
+      case 'CanGoNext':
+        this.canShowNextObject.next(value === 1);
+        break;
+      default:
+        console.error(`Unknown Unity message parameter: ${param}`);
+    }
   }
 }
