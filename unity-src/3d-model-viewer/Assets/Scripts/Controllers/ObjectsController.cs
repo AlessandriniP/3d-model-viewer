@@ -3,7 +3,6 @@ using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityGLTF;
 
 public class ObjectsController : MonoBehaviour
 {
@@ -16,8 +15,8 @@ public class ObjectsController : MonoBehaviour
   private readonly Stack<GameObject> _previousObjects = new();
 
   private GameObject[] _allObjects;
-  private GameObject _currentObject;
 
+  public GameObject CurrentObject { get; private set; }
   public bool CanGoPrevious { get; private set; }
   public bool CanGoNext { get; private set; }
 
@@ -38,7 +37,7 @@ public class ObjectsController : MonoBehaviour
 
     MoveObjectIn(
     _nextObjects.First(), _current.position,
-    _currentObject, _previous.position,
+    CurrentObject, _previous.position,
     _nextObjects, _previousObjects, ObjectHistory.Next
 );
   }
@@ -53,19 +52,10 @@ public class ObjectsController : MonoBehaviour
     }
 
     MoveObjectIn(
-    _previousObjects.First(), _current.position,
-    _currentObject, _next.position,
-    _previousObjects, _nextObjects, ObjectHistory.Previous
-);
-  }
-
-  // TODO: a javascript function can call this get the URI of the current object
-  [Button]
-  public void GetCurrentObjectUri()
-  {
-    var uri = _currentObject?.GetComponent<GLTFComponent>().GLTFUri;
-
-    Debug.Log($"Current Object URI: {uri}");
+      _previousObjects.First(), _current.position,
+      CurrentObject, _next.position,
+      _previousObjects, _nextObjects, ObjectHistory.Previous
+    );
   }
 
   public void ProcessGltfObjects(GameObject[] objects)
@@ -89,13 +79,13 @@ public class ObjectsController : MonoBehaviour
   {
     if (fromStack.Count > 0)
     {
-      if (_currentObject)
+      if (CurrentObject)
       {
-        toStack.Push(_currentObject);
+        toStack.Push(CurrentObject);
       }
 
       var obj = fromStack.Pop();
-      _currentObject = obj;
+      CurrentObject = obj;
     }
 
     CanGoNextOrPrevious(fromStack, toStack, history);
@@ -113,8 +103,6 @@ public class ObjectsController : MonoBehaviour
       CanGoPrevious = fromStack.Count > 0;
       CanGoNext = toStack.Count > 0;
     }
-
-    // TODO: call javascript function here to set _canGoNext and _canGoPrevious for ui
   }
 
   private void MoveObjectIn(

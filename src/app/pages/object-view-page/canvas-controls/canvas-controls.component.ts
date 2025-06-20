@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, effect, inject, viewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,21 +10,8 @@ import { UnityCommunicatorService } from '../../../services/unity-communicator.s
   templateUrl: './canvas-controls.component.html',
   styleUrl: './canvas-controls.component.scss'
 })
-export class CanvasControlsComponent implements AfterViewInit {
-  @ViewChild('showPreviousBtn') showPreviousBtnRef!: ElementRef<HTMLButtonElement>;
-  @ViewChild('showNextBtn') showNextBtnRef!: ElementRef<HTMLButtonElement>;
-
-  private readonly unityCommunicatorService = inject(UnityCommunicatorService);
-
-  ngAfterViewInit(): void {
-    this.unityCommunicatorService.canShowPreviousObject.subscribe((canShow) => {
-      this.showPreviousBtnRef.nativeElement.disabled = !canShow;
-    });
-
-    this.unityCommunicatorService.canShowNextObject.subscribe((canShow) => {
-      this.showNextBtnRef.nativeElement.disabled = !canShow;
-    });
-  }
+export class CanvasControlsComponent {
+  readonly unityCommunicatorService = inject(UnityCommunicatorService);
 
   previousObject(): void {
     this.unityCommunicatorService.showPreviousObject();

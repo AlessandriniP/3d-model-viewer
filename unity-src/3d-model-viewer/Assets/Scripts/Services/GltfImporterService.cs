@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityGLTF;
 
@@ -8,22 +8,24 @@ public class GltfImporterService : Singleton<GltfImporterService>
   [SerializeField] private GameObject _gltfObject;
   [SerializeField] private Transform _objectParent;
 
-  public void ImportGltfModelsFrom(string[] filePaths)
-  {
-    var objectCount = filePaths.Length;
-    var objects = new GameObject[objectCount];
+  private List<GameObject> _objects = new();
 
-    for (var i = 0; i < objectCount; i++)
+  public void ImportGltfModelsFrom(Dictionary<string, string> files)
+  {
+    _objects.Clear();
+
+    foreach (var file in files)
     {
       var obj = Instantiate(_gltfObject, _objectParent);
-      var gltfComponent = obj.GetComponent<GLTFComponent>();
+      obj.name = file.Value;
 
-      gltfComponent.GLTFUri = filePaths[i];
+      var gltfComponent = obj.GetComponent<GLTFComponent>();
+      gltfComponent.GLTFUri = file.Key;
       gltfComponent.Load();
 
-      objects[i] = obj;
+      _objects.Add(obj);
     }
 
-    _objectsController.ProcessGltfObjects(objects);
+    _objectsController.ProcessGltfObjects(_objects.ToArray());
   }
 }

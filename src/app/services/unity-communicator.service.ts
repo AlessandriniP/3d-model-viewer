@@ -1,13 +1,14 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnityCommunicatorService {
-  canShowPreviousObject = new BehaviorSubject<boolean>(false);
-  canShowNextObject = new BehaviorSubject<boolean>(false);
+  canShowPreviousObject = signal(false);
+  canShowNextObject = signal(false);
+  objectTitle = signal('');
+  objectUri = signal('');
 
   private readonly communicatorServiceName = 'WebCommunicatorService';
 
@@ -49,13 +50,17 @@ export class UnityCommunicatorService {
     }
   }
 
-  private handleUnityMessage(param: string, value: number): void {
+  private handleUnityMessage(param: string, value1: number | string, value2: number | string = ''): void {
     switch (param) {
       case 'CanGoPrevious':
-        this.canShowPreviousObject.next(value === 1);
+        this.canShowPreviousObject.set(value1 === 1);
         break;
       case 'CanGoNext':
-        this.canShowNextObject.next(value === 1);
+        this.canShowNextObject.set(value1 === 1);
+        break;
+      case 'ObjectDescription':
+        this.objectUri.set(value1 as string);
+        this.objectTitle.set(value2 as string);
         break;
       default:
         console.error(`Unknown Unity message parameter: ${param}`);

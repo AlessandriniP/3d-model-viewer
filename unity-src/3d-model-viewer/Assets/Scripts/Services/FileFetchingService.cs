@@ -64,10 +64,12 @@ public class FileFetchingService : Singleton<FileFetchingService>
       yield break;
     }
 
-    var filePaths = json.model_names
-        .Select(name => $"{BaseFetchingUrl}{ModelBaseFolderPath}{name}.glb")
-        .ToArray();
+    var files = json.model_names
+        .ToDictionary(
+            name => $"{BaseFetchingUrl}{ModelBaseFolderPath}{name}.glb",
+            name => name
+        );
 
-    GltfImporterService.Instance.ImportGltfModelsFrom(filePaths);
+    GltfImporterService.Instance.ImportGltfModelsFrom(files);
   }
 }

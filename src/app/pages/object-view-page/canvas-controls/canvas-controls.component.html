@@ -1,8 +1,12 @@
 <div class="historyButtonContainer">
-  <button #showPreviousBtn class="historyButton" (click)="previousObject()">
+  <button #showPreviousBtn class="historyButton"
+          (click)="previousObject()"
+          [disabled]="!unityCommunicatorService.canShowPreviousObject()">
     <mat-icon class="chevronIcon">chevron_left</mat-icon>
   </button>
-  <button #showNextBtn class="historyButton" (click)="nextObject()">
+  <button #showNextBtn class="historyButton"
+          (click)="nextObject()"
+          [disabled]="!unityCommunicatorService.canShowNextObject()">
     <mat-icon class="chevronIcon">chevron_right</mat-icon>
   </button>
 </div>
@@ -12,7 +16,9 @@
     <mat-icon class="sideMenuIcon">view_in_ar</mat-icon>
   </button>
   <mat-divider class="sideMenuDivider"/>
-  <button class="sideMenuButton" (click)="downloadObject()">
+  <button class="sideMenuButton"
+          (click)="downloadObject()"
+          [disabled]="unityCommunicatorService.objectUri() === ''">
     <mat-icon class="sideMenuIcon">download</mat-icon>
   </button>
   <mat-divider class="sideMenuDivider"/>

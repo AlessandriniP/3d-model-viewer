@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { UnityCommunicatorService } from './services/unity-communicator.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,5 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = '3d-model-viewer';
+  readonly unityCommunicatorService = inject(UnityCommunicatorService);
 }
