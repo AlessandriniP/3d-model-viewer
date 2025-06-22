@@ -225,7 +225,6 @@ GameObject:
   m_Component:
   - component: {fileID: 330585546}
   - component: {fileID: 330585545}
-  - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
   m_Layer: 0
@@ -235,14 +234,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &330585544
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
 --- !u!20 &330585545
 Camera:
   m_ObjectHideFlags: 0
@@ -712,9 +703,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529f83811bcdfa84e9c22bed805a9905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseFetchingUrl>k__BackingField: C:\Users\Phili\OS\Modelling\
-  <ModelJsonFileName>k__BackingField: model-overview.json
-  <ModelBaseFolderPath>k__BackingField: models\
+  _fetchLocal: 0
+  <LocalBaseFetchingUri>k__BackingField: D:/Unity Projects/3d-model-viewer/public/models/
+  <LocalModelOverviewJsonName>k__BackingField: model-overview.json
 --- !u!1 &981305355
 GameObject:
   m_ObjectHideFlags: 0
@@ -838,6 +829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c0cad458bab704da66260ca1d0178e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fileFetchingService: {fileID: 867781708}
   _objectsController: {fileID: 584115019}
   _cameraController: {fileID: 330585548}
 --- !u!1 &1465736611
@@ -885,7 +877,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _objectsController: {fileID: 584115019}
-  _gltfObject: {fileID: 5638514277736299133, guid: 1b4c575162201014b8fa960c2a1c4802, type: 3}
   _objectParent: {fileID: 584115018}
 --- !u!1 &2083680601
 GameObject:

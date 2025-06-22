@@ -1,75 +1,76 @@
 using System;
-using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class FileFetchingService : Singleton<FileFetchingService>
 {
-  [field: SerializeField] public string BaseFetchingUrl { get; private set; }
-  [field: SerializeField] public string ModelJsonFileName { get; private set; }
-  [field: SerializeField] public string ModelBaseFolderPath { get; private set; }
+  public event Action JsonFetchedFromWeb;
 
-  private void Start()
+  [SerializeField] private bool _fetchLocal = false;
+
+  [field: SerializeField] public string LocalBaseFetchingUri { get; private set; }
+  [field: SerializeField] public string LocalModelOverviewJsonName { get; private set; }
+
+  private async void Start()
   {
-    StartCoroutine(FetchJson(fetchLocal: true));
+    if (_fetchLocal)
+    {
+      await FetchJsonAndImportAsync(
+          Path.Combine(LocalBaseFetchingUri, LocalModelOverviewJsonName),
+          LocalBaseFetchingUri,
+          isLocal: true
+      );
+    }
   }
 
-  private IEnumerator FetchJson(bool fetchLocal)
+  public async Task FetchJsonFromWebAsync(string modelsJson, string modelsBaseUri)
   {
-    var fileText = String.Empty;
-
-    if (fetchLocal)
+    if (_fetchLocal)
     {
-      var filePath = Path.Combine(BaseFetchingUrl, ModelJsonFileName);
-
-      if (!File.Exists(filePath))
-      {
-        Debug.LogError($"Local file not found: {filePath}");
-
-        yield break;
-      }
-
-      fileText = File.ReadAllText(filePath);
+      return;
     }
-    else
-    {
-      using var webRequest = UnityWebRequest.Get($"{BaseFetchingUrl}{ModelJsonFileName}");
 
-      yield return webRequest.SendWebRequest();
+    await FetchJsonAndImportAsync(modelsJson, modelsBaseUri, isLocal: false);
 
-      if (webRequest.result == UnityWebRequest.Result.Success)
-      {
-        fileText = webRequest.downloadHandler.text;
-      }
-      else
-      {
-        Debug.LogError($"Error while fetching the remote file: " +
-          $"{BaseFetchingUrl}{ModelJsonFileName} - {webRequest.error}");
+    JsonFetchedFromWeb?.Invoke();
+  }
 
-        yield break;
-      }
-    }
+  private async Task FetchJsonAndImportAsync(string jsonSource, string baseUri, bool isLocal)
+  {
+    string fileText = isLocal
+        ? ReadLocalFile(jsonSource)
+        : jsonSource;
 
     if (string.IsNullOrEmpty(fileText))
     {
-      yield break;
+      return;
     }
 
     var json = JsonUtility.FromJson<ModelFileNames>(fileText);
 
     if (json?.model_names == null)
     {
-      yield break;
+      Debug.LogError("Models JSON has wrong format.");
+      return;
     }
 
-    var files = json.model_names
-        .ToDictionary(
-            name => $"{BaseFetchingUrl}{ModelBaseFolderPath}{name}.glb",
-            name => name
-        );
+    var files = json.model_names.ToDictionary(
+        name => name,
+        name => baseUri
+    );
 
-    GltfImporterService.Instance.ImportGltfModelsFrom(files);
+    await GltfImporterService.Instance.ImportGltfModelsFrom(files);
+  }
+
+  private string ReadLocalFile(string filePath)
+  {
+    if (!File.Exists(filePath))
+    {
+      Debug.LogError($"Local file not found: {filePath}");
+      return null;
+    }
+    return File.ReadAllText(filePath);
   }
 }
