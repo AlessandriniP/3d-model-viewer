@@ -48,7 +48,17 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
     _cameraController.ResetView();
   }
 
-  private void FetchCurrentObjectDescription()
+  public void OnSendModelsPath(string modelsPath)
+  {
+    Debug.Log($"Models path sent: {modelsPath}");
+  }
+
+  public void OnSendModelOverviewJson(string modelOverviewJson)
+  {
+    Debug.Log($"Model overview JSON sent: {modelOverviewJson}");
+  }
+
+  private void FetchCurrentObjectDescription() // TODO: start fetching description after first object is loaded and current object is set instead of Start() 
   {
     var currentObject = _objectsController.CurrentObject;
 

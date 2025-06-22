@@ -32,7 +32,7 @@ export class UnityCanvasComponent implements AfterViewInit {
         productVersion: '1.0'
       }).then((instance: any) => {
         unityCanvas.style.cursor = 'crosshair';
-        this.unityCommunicatorService.unityInstance = instance;
+        this.unityCommunicatorService.init(instance);
         this.canvasReady.emit();
       });
     }

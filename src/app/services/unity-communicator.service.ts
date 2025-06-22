@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,9 @@ export class UnityCommunicatorService {
   objectTitle = signal('');
   objectUri = signal('');
 
+  private readonly http = inject(HttpClient);
   private readonly communicatorServiceName = 'WebCommunicatorService';
+  private readonly modelOverviewJsonUrl = '/models/model-overview.json';
 
   private _unityInstance: any;
 
@@ -22,8 +25,11 @@ export class UnityCommunicatorService {
     }
   }
 
-  set unityInstance(instance: any) {
+  init(instance: any): void {
     this._unityInstance = instance;
+
+    this.sendModelOverviewJson();
+    this.sendModelsPath();
   }
 
   showNextObject(): void {
@@ -50,7 +56,37 @@ export class UnityCommunicatorService {
     }
   }
 
-  private handleUnityMessage(param: string, value1: number | string, value2: number | string = ''): void {
+  private sendModelsPath(): void {
+    if (this._unityInstance) {
+      this._unityInstance.SendMessage(this.communicatorServiceName, 'OnSendModelsPath',
+        `${window.location.origin}/models/`);
+    } else {
+      console.error('Unity instance is not initialized. Cannot send models path.');
+    }
+  }
+
+  private sendModelOverviewJson(): void {
+    if (!this._unityInstance) {
+      console.error('Unity instance is not initialized. Cannot send model overview JSON.');
+      return;
+    }
+
+    this.http.get(this.modelOverviewJsonUrl, { responseType: 'text' }).subscribe({
+      next: (jsonString: string) => {
+        this._unityInstance.SendMessage(
+          this.communicatorServiceName,
+          'OnSendModelOverviewJson',
+          jsonString
+        );
+      },
+      error: (err) => {
+        console.error('Error while loading the model overview JSON:', err);
+      }
+    });
+  }
+
+  private handleUnityMessage(param: string, value1: number | string,
+                             value2: number | string = ''): void {
     switch (param) {
       case 'CanGoPrevious':
         this.canShowPreviousObject.set(value1 === 1);
