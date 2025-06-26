@@ -1,11 +1,15 @@
 using DG.Tweening;
 using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class ObjectsController : MonoBehaviour
 {
+  public event Action<bool> CanGoPrevious;
+  public event Action<bool> CanGoNext;
+
   [SerializeField] private Transform _next;
   [SerializeField] private Transform _current;
   [SerializeField] private Transform _previous;
@@ -15,10 +19,10 @@ public class ObjectsController : MonoBehaviour
   private readonly Stack<GameObject> _previousObjects = new();
 
   private GameObject[] _allObjects;
+  private bool _canGoPrevious;
+  private bool _canGoNext;
 
   public GameObject CurrentObject { get; private set; }
-  public bool CanGoPrevious { get; private set; }
-  public bool CanGoNext { get; private set; }
 
   private enum ObjectHistory
   {
@@ -26,11 +30,11 @@ public class ObjectsController : MonoBehaviour
     Previous
   }
 
-  [EnableIf(nameof(CanGoNext))]
+  [EnableIf(nameof(_canGoNext))]
   [Button]
   public void ShowNextObject()
   {
-    if (_cameraController.LockedView || !CanGoNext)
+    if (_cameraController.LockedView || !_canGoNext)
     {
       return;
     }
@@ -42,11 +46,11 @@ public class ObjectsController : MonoBehaviour
 );
   }
 
-  [EnableIf(nameof(CanGoPrevious))]
+  [EnableIf(nameof(_canGoPrevious))]
   [Button]
   public void ShowPreviousObject()
   {
-    if (_cameraController.LockedView || !CanGoPrevious)
+    if (_cameraController.LockedView || !_canGoPrevious)
     {
       return;
     }
@@ -95,14 +99,17 @@ public class ObjectsController : MonoBehaviour
   {
     if (history == ObjectHistory.Next)
     {
-      CanGoNext = fromStack.Count > 0;
-      CanGoPrevious = toStack.Count > 0;
+      _canGoNext = fromStack.Count > 0;
+      _canGoPrevious = toStack.Count > 0;
     }
     else
     {
-      CanGoPrevious = fromStack.Count > 0;
-      CanGoNext = toStack.Count > 0;
+      _canGoPrevious = fromStack.Count > 0;
+      _canGoNext = toStack.Count > 0;
     }
+
+    CanGoNext?.Invoke(_canGoNext);
+    CanGoPrevious?.Invoke(_canGoPrevious);
   }
 
   private void MoveObjectIn(

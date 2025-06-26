@@ -20,12 +20,10 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
 
   private void Start()
   {
-    _fileFetchingService.JsonFetchedFromWeb += FetchCurrentObjectDescription;
+    _objectsController.CanGoPrevious += SendCanGoPreviousState;
+    _objectsController.CanGoNext += SendCanGoNextState;
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-    CanShowPreviousObject("CanGoPrevious", _objectsController.CanGoPrevious ? 1 : 0);
-    CanShowNextObject("CanGoNext", _objectsController.CanGoNext ? 1 : 0);
-#endif
+    _fileFetchingService.JsonFetchedFromWeb += FetchCurrentObjectDescription;
   }
 
   public void OnShowPreviousObject()
@@ -33,7 +31,6 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
     _objectsController.ShowPreviousObject();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-     CanShowPreviousObject("CanGoPrevious", _objectsController.CanGoPrevious ? 1 : 0);
      FetchCurrentObjectDescription();
 #endif
   }
@@ -43,7 +40,6 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
     _objectsController.ShowNextObject();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-     CanShowNextObject("CanGoNext", _objectsController.CanGoNext ? 1 : 0);
      FetchCurrentObjectDescription();
 #endif
   }
@@ -77,15 +73,29 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
 
   private void FetchCurrentObjectDescription()
   {
-    var currentObject = _objectsController.CurrentObject;
+    var currentObject = _objectsController.CurrentObject; // TODO: wrong object
 
     ObjectDescription("ObjectDescription",
-      currentObject?.GetComponent<GLTFComponent>().GLTFUri,
+      currentObject?.GetComponent<GLTFComponent>().GLTFUri, // TODO: GLTFComponent does not exist
       currentObject?.name);
 
     if (!currentObject)
     {
       Debug.LogWarning("No objects found.");
     }
+  }
+
+  private void SendCanGoPreviousState(bool state)
+  {
+#if UNITY_WEBGL && !UNITY_EDITOR
+     CanShowPreviousObject("CanGoPrevious", state ? 1 : 0);
+#endif
+  }
+
+  private void SendCanGoNextState(bool state)
+  {
+#if UNITY_WEBGL && !UNITY_EDITOR
+     CanShowNextObject("CanGoNext", state ? 1 : 0);
+#endif
   }
 }
