@@ -1,16 +1,25 @@
 <div class="historyButtonContainer">
-  <button #showPreviousBtn class="historyButton" (click)="previousObject()"
-    [disabled]="!unityCommunicatorService.canShowPreviousObject()">
+  <button #showPreviousBtn class="historyButton"           
+          matTooltip="Previous object (&larr; + A)"
+          matTooltipPosition="left"
+          (click)="previousObject()"
+          [disabled]="!unityCommunicatorService.canShowPreviousObject()">
     <mat-icon class="chevronIcon">chevron_left</mat-icon>
   </button>
-  <button #showNextBtn class="historyButton" (click)="nextObject()"
-    [disabled]="!unityCommunicatorService.canShowNextObject()">
+  <button #showNextBtn class="historyButton"           
+          matTooltip="Next object (&rarr; + D)"
+          matTooltipPosition="right" 
+          (click)="nextObject()"
+          [disabled]="!unityCommunicatorService.canShowNextObject()">
     <mat-icon class="chevronIcon">chevron_right</mat-icon>
   </button>
 </div>
 
 <div class="sideMenuContainer">
-  <button class="sideMenuButton" (click)="focusObject()">
+  <button class="sideMenuButton" 
+          matTooltip="Reset view (R)" 
+          matTooltipPosition="left"
+          (click)="focusObject()">
     <mat-icon class="sideMenuIcon">view_in_ar</mat-icon>
   </button>
   <mat-divider class="sideMenuDivider" />
@@ -18,17 +27,29 @@
   @let objectUri = unityCommunicatorService.objectUri();
 
   @if (objectUri !== '') {
-  <a class="sideMenuLink" [href]="unityCommunicatorService.objectUri()" download>
+  <a class="sideMenuLink"           
+     matTooltip="Download .glb file"
+     matTooltipPosition="left"
+     [href]="unityCommunicatorService.objectUri()" 
+     download>
     <mat-icon class="sideMenuIcon">download</mat-icon>
   </a>
   } @else {
-  <button class="sideMenuButton" disabled>
+  <button class="sideMenuButton" 
+          matTooltip="Download .glb file"
+          matTooltipPosition="left"
+          disabled>
     <mat-icon class="sideMenuIcon">download</mat-icon>
   </button>
   }
 
   <mat-divider class="sideMenuDivider" />
-  <a class="sideMenuLink" [href]="githubUrl" target="_blank" rel="noopener">
+  <a class="sideMenuLink"
+     matTooltip="View source"
+     matTooltipPosition="left"
+     [href]="githubUrl"
+     target="_blank"
+     rel="noopener">
     <mat-icon class="sideMenuIcon">code</mat-icon>
   </a>
 </div>
