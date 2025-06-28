@@ -11,6 +11,7 @@ import { UnityCommunicatorService } from '../../../services/unity-communicator.s
   styleUrl: './canvas-controls.component.scss'
 })
 export class CanvasControlsComponent {
+  readonly githubUrl = 'https://github.com/AlessandriniP/3d-model-viewer';
   readonly unityCommunicatorService = inject(UnityCommunicatorService);
 
   previousObject(): void {

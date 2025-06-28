@@ -13,14 +13,15 @@ export class UnityCommunicatorService {
 
   private readonly http = inject(HttpClient);
   private readonly communicatorServiceName = 'WebCommunicatorService';
-  private readonly modelOverviewJsonUrl = '/models/model-overview.json';
+  private readonly modelOverviewJsonUrl = './models/model-overview.json';
 
   private _unityInstance: any;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
-      (window as any).onUnityMessage = (param: string, value: number) => {
-        this.handleUnityMessage(param, value);
+      (window as any).onUnityMessage =
+        (param: string, value1: number | string, value2: number | string = '') => {
+        this.handleUnityMessage(param, value1, value2);
       };
     }
   }
@@ -59,7 +60,7 @@ export class UnityCommunicatorService {
   private sendModelsPath(): void {
     if (this._unityInstance) {
       this._unityInstance.SendMessage(this.communicatorServiceName, 'OnSendModelsPath',
-        `${window.location.origin}/models/`);
+        `./models/`);
     } else {
       console.error('Unity instance is not initialized. Cannot send models path.');
     }

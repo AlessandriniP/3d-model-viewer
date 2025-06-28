@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,12 +7,12 @@ using UnityEngine;
 
 public class FileFetchingService : Singleton<FileFetchingService>
 {
-  public event Action JsonFetchedFromWeb;
-
-  [SerializeField] private bool _fetchLocal = false;
+  public event Action<Dictionary<string, string>> ModelsJsonFetched;
 
   [field: SerializeField] public string LocalBaseFetchingUri { get; private set; }
   [field: SerializeField] public string LocalModelOverviewJsonName { get; private set; }
+
+  [SerializeField] private bool _fetchLocal = false;
 
   private async void Start()
   {
@@ -33,8 +34,6 @@ public class FileFetchingService : Singleton<FileFetchingService>
     }
 
     await FetchJsonAndImportAsync(modelsJson, modelsBaseUri, isLocal: false);
-
-    JsonFetchedFromWeb?.Invoke();
   }
 
   private async Task FetchJsonAndImportAsync(string jsonSource, string baseUri, bool isLocal)
@@ -58,10 +57,12 @@ public class FileFetchingService : Singleton<FileFetchingService>
 
     var files = json.model_names.ToDictionary(
         name => name,
-        name => baseUri
+        name => baseUri + name + FileExtensions.Gltf
     );
 
-    await GltfImporterService.Instance.ImportGltfModelsFrom(files);
+    ModelsJsonFetched?.Invoke(files);
+
+    await GltfImporterService.Instance.ImportGltfModelsFrom(files, baseUri);
   }
 
   private string ReadLocalFile(string filePath)

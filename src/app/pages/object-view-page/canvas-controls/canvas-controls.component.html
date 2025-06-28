@@ -1,12 +1,10 @@
 <div class="historyButtonContainer">
-  <button #showPreviousBtn class="historyButton"
-          (click)="previousObject()"
-          [disabled]="!unityCommunicatorService.canShowPreviousObject()">
+  <button #showPreviousBtn class="historyButton" (click)="previousObject()"
+    [disabled]="!unityCommunicatorService.canShowPreviousObject()">
     <mat-icon class="chevronIcon">chevron_left</mat-icon>
   </button>
-  <button #showNextBtn class="historyButton"
-          (click)="nextObject()"
-          [disabled]="!unityCommunicatorService.canShowNextObject()">
+  <button #showNextBtn class="historyButton" (click)="nextObject()"
+    [disabled]="!unityCommunicatorService.canShowNextObject()">
     <mat-icon class="chevronIcon">chevron_right</mat-icon>
   </button>
 </div>
@@ -15,14 +13,22 @@
   <button class="sideMenuButton" (click)="focusObject()">
     <mat-icon class="sideMenuIcon">view_in_ar</mat-icon>
   </button>
-  <mat-divider class="sideMenuDivider"/>
-  <button class="sideMenuButton"
-          (click)="downloadObject()"
-          [disabled]="unityCommunicatorService.objectUri() === ''">
+  <mat-divider class="sideMenuDivider" />
+
+  @let objectUri = unityCommunicatorService.objectUri();
+
+  @if (objectUri !== '') {
+  <a class="sideMenuLink" [href]="unityCommunicatorService.objectUri()" download>
+    <mat-icon class="sideMenuIcon">download</mat-icon>
+  </a>
+  } @else {
+  <button class="sideMenuButton" disabled>
     <mat-icon class="sideMenuIcon">download</mat-icon>
   </button>
-  <mat-divider class="sideMenuDivider"/>
-  <button class="sideMenuButton" (click)="openProjectSource()">
+  }
+
+  <mat-divider class="sideMenuDivider" />
+  <a class="sideMenuLink" [href]="githubUrl" target="_blank" rel="noopener">
     <mat-icon class="sideMenuIcon">code</mat-icon>
-  </button>
+  </a>
 </div>

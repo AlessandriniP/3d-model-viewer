@@ -29,7 +29,7 @@ $menu-container-blur: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.25);
   cursor: pointer;
 }
 
@@ -48,7 +48,7 @@ $menu-container-blur: blur(12px);
   align-items: center;
   background: rgba(34, 207, 203, 0.7);
   border-radius: 12px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.25);
   padding: 4px;
   z-index: 3;
   backdrop-filter: $menu-container-blur;
@@ -65,13 +65,22 @@ $menu-container-blur: blur(12px);
   cursor: pointer;
 }
 
+.sideMenuLink {
+  @extend .sideMenuButton;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .historyButton:hover,
-.sideMenuButton:hover {
+.sideMenuButton:hover,
+.sideMenuLink:hover {
   background: $button-hover-color;
 }
 
 .historyButton:active,
-.sideMenuButton:active {
+.sideMenuButton:active,
+.sideMenuLink:active {
   background: $button-active-color;
 }
 

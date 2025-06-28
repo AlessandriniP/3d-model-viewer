@@ -9,17 +9,15 @@ public class GltfImporterService : Singleton<GltfImporterService>
   [SerializeField] private ObjectsController _objectsController;
   [SerializeField] private Transform _objectParent;
 
-  private const string _gltfExtension = ".glb";
-
   private List<GameObject> _objects = new();
 
-  public async Task ImportGltfModelsFrom(Dictionary<string, string> files)
+  public async Task ImportGltfModelsFrom(Dictionary<string, string> files, string baseUri)
   {
     _objects.Clear();
 
     foreach (var file in files)
     {
-      var obj = await ImportGltfModel(file.Value, file.Key);
+      var obj = await ImportGltfModel(baseUri , file.Key);
 
       _objects.Add(obj);
     }
@@ -27,14 +25,14 @@ public class GltfImporterService : Singleton<GltfImporterService>
     _objectsController.ProcessGltfObjects(_objects.ToArray());
   }
 
-  private async Task<GameObject> ImportGltfModel(string uriDir, string filename)
+  private async Task<GameObject> ImportGltfModel(string baseUri, string filename)
   {
     var importOpt = new ImportOptions
     {
-      DataLoader = new UnityWebRequestLoader(uriDir)
+      DataLoader = new UnityWebRequestLoader(baseUri)
     };
 
-    var import = new GLTFSceneImporter(filename + _gltfExtension, importOpt);
+    var import = new GLTFSceneImporter(filename + FileExtensions.Gltf, importOpt);
 
     await import.LoadSceneAsync();
 
