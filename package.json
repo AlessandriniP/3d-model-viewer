@@ -9,7 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:3d-model-viewer": "node dist/3d-model-viewer/server/server.mjs",
-    "electron": "electron ."
+    "electron": "electron .",
+    "host": "ng serve --host 0.0.0.0"
   },
   "private": true,
   "dependencies": {
