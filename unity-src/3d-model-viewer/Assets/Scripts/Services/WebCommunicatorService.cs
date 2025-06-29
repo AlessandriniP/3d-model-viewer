@@ -10,6 +10,8 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
   [SerializeField] private CameraController _cameraController;
 
   [DllImport("__Internal")]
+  private static extern void ModelsFetched(string param);
+  [DllImport("__Internal")]
   private static extern void CanShowPreviousObject(string param, int value);
   [DllImport("__Internal")]
   private static extern void CanShowNextObject(string param, int value);
@@ -62,7 +64,16 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
     if (_modelsPath != null && _modelOverviewJson != null)
     {
       await _fileFetchingService.FetchJsonFromWebAsync(_modelOverviewJson, _modelsPath);
+
+      SendFetchedModelsInfo();
     }
+  }
+
+  private void SendFetchedModelsInfo()
+  {
+#if UNITY_WEBGL && !UNITY_EDITOR
+     ModelsFetched("ModelsFetched");
+#endif
   }
 
   private void SendCanGoPreviousState(bool state)

@@ -6,6 +6,7 @@ import { Inject, Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class UnityCommunicatorService {
+  modelsFetched = signal(false);
   canShowPreviousObject = signal(false);
   canShowNextObject = signal(false);
   objectTitle = signal('');
@@ -89,6 +90,9 @@ export class UnityCommunicatorService {
   private handleUnityMessage(param: string, value1: number | string,
                              value2: number | string = ''): void {
     switch (param) {
+      case 'ModelsFetched':
+        this.modelsFetched.set(true);
+        break;
       case 'CanGoPrevious':
         this.canShowPreviousObject.set(value1 === 1);
         break;

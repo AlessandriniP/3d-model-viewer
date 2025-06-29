@@ -1,4 +1,12 @@
 mergeInto(LibraryManager.library, {
+    ModelsFetched: function(paramPtr) {
+    var param = UTF8ToString(paramPtr);
+
+    if (typeof window.onUnityMessage === "function") {
+      window.onUnityMessage(param);
+    }
+  },
+
   CanShowPreviousObject: function(paramPtr, value) {
     var param = UTF8ToString(paramPtr);
 

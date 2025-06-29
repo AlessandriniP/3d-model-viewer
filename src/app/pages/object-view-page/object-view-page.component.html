@@ -2,6 +2,9 @@
 
 @if (canvasReady) {
   <app-canvas-controls></app-canvas-controls>
+  @if (!hideFetchingHint) {
+    <app-loading-progress-hint class="fetching-hint" hintText="Fetching objects"></app-loading-progress-hint>
+  }
 } @else {
-  <app-canvas-loading-hint></app-canvas-loading-hint>
+  <app-loading-progress-hint hintText="Loading view"></app-loading-progress-hint>
 }
