@@ -30,6 +30,12 @@ public class ObjectsController : MonoBehaviour
     Previous
   }
 
+  private void Start()
+  {
+    InputActionService.Instance.ShowPreviousObject += ShowPreviousObject;
+    InputActionService.Instance.ShowNextObject += ShowNextObject;
+  }
+
   [EnableIf(nameof(_canGoNext))]
   [Button]
   public void ShowNextObject()

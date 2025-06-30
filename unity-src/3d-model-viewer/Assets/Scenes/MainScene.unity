@@ -610,6 +610,9 @@ MonoBehaviour:
   _middleDragAction: {fileID: 3375478313059042827, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _scrollWheelAction: {fileID: 6240969308177333660, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _moveMouseAction: {fileID: 5493571560094344023, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _showPreviousObjectAction: {fileID: -6349678157979031099, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _showNextObjectAction: {fileID: 6311647602518975196, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _resetViewAction: {fileID: 6040401757256678797, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

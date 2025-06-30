@@ -26,6 +26,7 @@ public class CameraController : MonoBehaviour
   {
     InputActionService.Instance.ScrollWheel += OnScrollWheel;
     InputActionService.Instance.MoveMouse += OnMoveMouse;
+    InputActionService.Instance.ResetView += ResetView;
   }
 
   private void Update()
@@ -36,6 +37,11 @@ public class CameraController : MonoBehaviour
   [Button]
   public void ResetView()
   {
+    if (LockedView)
+    {
+      return;
+    }
+
     var resetViewSequence = DOTween.Sequence();
 
     resetViewSequence.Join(_cameraPivot.DOMove(Vector3.zero, ResetViewSpeed));
