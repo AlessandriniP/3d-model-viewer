@@ -1,14 +1,18 @@
+const basePath = 'dist/3d-model-viewer/browser'
 const { app, BrowserWindow } = require('electron/main')
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 1280,
     height: 720,
+    minWidth: 400,
+    minHeight: 500,
+    icon: basePath + '/favicon.ico',
   })
 
   win.removeMenu()
   //win.webContents.openDevTools()
-  win.loadFile('dist/3d-model-viewer/browser/index.html')
+  win.loadFile(basePath + '/index.html')
 }
 
 app.whenReady().then(() => {
