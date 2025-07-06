@@ -972,6 +972,17 @@
                 },
                 {
                     "name": "",
+                    "id": "14ec1ff4-0d2d-4b31-ba24-f5b3d0a13d06",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse;Touch",
+                    "action": "LeftDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e245ec1f-827e-4bb8-b701-0ce4d89e7fec",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
@@ -999,6 +1010,17 @@
                     "interactions": "",
                     "processors": "ScaleVector2(x=0.3,y=0.3)",
                     "groups": ";Keyboard&Mouse",
+                    "action": "MoveMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5d158b24-91d2-457c-8b88-bf4422b55eaf",
+                    "path": "<Touchscreen>/delta",
+                    "interactions": "",
+                    "processors": "ScaleVector2(x=0.3,y=0.3)",
+                    "groups": ";Keyboard&Mouse;Touch",
                     "action": "MoveMouse",
                     "isComposite": false,
                     "isPartOfComposite": false
