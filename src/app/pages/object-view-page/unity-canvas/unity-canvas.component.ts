@@ -7,7 +7,7 @@ import { UnityCommunicatorService } from '../../../services/unity-communicator.s
   templateUrl: './unity-canvas.component.html',
   styleUrl: './unity-canvas.component.scss'
 })
-export class UnityCanvasComponent implements AfterViewInit, OnDestroy {
+export class UnityCanvasComponent implements AfterViewInit {
   canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('unityCanvas');
   canvasReady = output<void>();
 
@@ -34,37 +34,10 @@ export class UnityCanvasComponent implements AfterViewInit, OnDestroy {
         unityCanvas.style.cursor = 'crosshair';
         this.unityCommunicatorService.init(instance);
         this.canvasReady.emit();
-
-        this.registerWebGLToCanvasResizeHandler(instance);
       });
     }
     catch {
       // ignore exceptions
     }
-  }
-
-  ngOnDestroy(): void {
-    if (this.resizeHandler) {
-      window.removeEventListener('resize', this.resizeHandler);
-    }
-  }
-
-  private registerWebGLToCanvasResizeHandler(unityInstance: any): void {
-    const unityModule = unityInstance.Module;
-    let resizeTimeout: number;
-
-    this.resizeHandler = () => {
-      if (unityModule) {
-        unityModule.matchWebGLToCanvasSize = false;
-      }
-      clearTimeout(resizeTimeout);
-      resizeTimeout = window.setTimeout(() => {
-        if (unityModule) {
-          unityModule.matchWebGLToCanvasSize = true;
-        }
-      }, 100);
-    };
-
-    window.addEventListener('resize', this.resizeHandler);
   }
 }
