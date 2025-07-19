@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
   private const float _panSpeed = 5f;
   private const float _scrollZoomSpeed = 150f;
   private const float _mouseZoomSpeed = 35f;
-  private const float _minZoomDist = 1f;
+  private const float _minZoomDist = .001f;
   private const float _maxZoomDist = 200f;
 
   public float ResetViewSpeed { get; private set; } = 0.2f;
