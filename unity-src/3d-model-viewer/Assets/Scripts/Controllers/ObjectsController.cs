@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class ObjectsController : MonoBehaviour
 {
+  public event Action<GameObject> ProcessedObject;
   public event Action<bool> CanGoPrevious;
   public event Action<bool> CanGoNext;
 
@@ -96,6 +97,8 @@ public class ObjectsController : MonoBehaviour
 
       var obj = fromStack.Pop();
       CurrentObject = obj;
+
+      ProcessedObject?.Invoke(CurrentObject);
     }
 
     CanGoNextOrPrevious(fromStack, toStack, history);

@@ -24,6 +24,7 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
 
   private void Start()
   {
+    _objectsController.ProcessedObject += FetchCurrentObjectDescription;
     _objectsController.CanGoPrevious += SendCanGoPreviousState;
     _objectsController.CanGoNext += SendCanGoNextState;
 
@@ -87,18 +88,12 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
   {
 #if UNITY_WEBGL && !UNITY_EDITOR
      CanShowNextObject("CanGoNext", state ? 1 : 0);
-     FetchCurrentObjectDescription();
 #endif
   }
 
-  private void OnModelsJsonFetched(Dictionary<string, string> modelURIs)
+  private void FetchCurrentObjectDescription(GameObject currentObject)
   {
-    _modelURIs = modelURIs;
-  }
-
-  private void FetchCurrentObjectDescription()
-  {
-    var currentObject = _objectsController.CurrentObject;
+#if UNITY_WEBGL && !UNITY_EDITOR
     var objectName = currentObject.name;
 
     _modelURIs.TryGetValue(objectName, out var modelURI);
@@ -116,5 +111,11 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
     {
       Debug.LogWarning("No objects found.");
     }
+#endif
+  }
+
+  private void OnModelsJsonFetched(Dictionary<string, string> modelURIs)
+  {
+    _modelURIs = modelURIs;
   }
 }
