@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, Signal, ViewChild, inject, input, output, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, output, viewChild } from '@angular/core';
 import { UnityCommunicatorService } from '../../../services/unity-communicator.service';
 
 @Component({

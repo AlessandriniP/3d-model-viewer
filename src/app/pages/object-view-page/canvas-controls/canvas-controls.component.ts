@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, effect, inject, viewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -25,13 +25,5 @@ export class CanvasControlsComponent {
 
   focusObject(): void {
     this.unityCommunicatorService.resetView();
-  }
-
-  downloadObject(): void {
-    console.log('Download the current object');
-  }
-
-  openProjectSource(): void {
-    console.log('Open the project source in a new tab');
   }
 }
