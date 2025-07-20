@@ -2,7 +2,7 @@
 
 @if (canvasReady) {
   <app-canvas-controls></app-canvas-controls>
-  @if (!hideFetchingHint) {
+  @if (showFetchingHint()) {
     <app-loading-progress-hint class="fetching-hint" hintText="Fetching objects"></app-loading-progress-hint>
   }
 } @else {

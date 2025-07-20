@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { UnityCanvasComponent } from './unity-canvas/unity-canvas.component';
 import { CanvasControlsComponent } from './canvas-controls/canvas-controls.component';
 import { LoadingProgressHintComponent } from './loading-progress-hint/loading-progress-hint.component';
@@ -12,17 +12,9 @@ import { UnityCommunicatorService } from '../../services/unity-communicator.serv
 })
 export class ObjectViewPageComponent {
   canvasReady: boolean = false;
-  hideFetchingHint = false;
+  showFetchingHint = computed(() => !this.unityCommunicatorService.modelsFetched());
   
   private readonly unityCommunicatorService = inject(UnityCommunicatorService);
-
-  constructor() {
-    effect(() => {
-      if (this.unityCommunicatorService.modelsFetched()) {
-        this.hideFetchingHint = true;
-      }
-    });
-  }
 
   setCanvasReady(): void {
     this.canvasReady = true;
