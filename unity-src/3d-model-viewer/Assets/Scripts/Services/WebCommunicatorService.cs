@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityGLTF;
 
 public class WebCommunicatorService : Singleton<WebCommunicatorService>
 {
@@ -22,13 +21,15 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
   private string _modelOverviewJson;
   private Dictionary<string, string> _modelURIs;
 
-  private void Start()
+  protected override void Awake()
   {
-    _objectsController.ProcessedObject += FetchCurrentObjectDescription;
-    _objectsController.CanGoPrevious += SendCanGoPreviousState;
-    _objectsController.CanGoNext += SendCanGoNextState;
+    base.Awake();
 
     _fileFetchingService.ModelsJsonFetched += OnModelsJsonFetched;
+
+    _objectsController.ObjectProcessed += FetchCurrentObjectDescription;
+    _objectsController.CanGoPrevious += SendCanGoPreviousState;
+    _objectsController.CanGoNext += SendCanGoNextState;
   }
 
   public void OnShowPreviousObject()
@@ -100,16 +101,16 @@ public class WebCommunicatorService : Singleton<WebCommunicatorService>
 
     if (objectName == null || modelURI == null)
     {
-      Debug.LogError("Wrong object description.");
+        Debug.LogError("Wrong object description.");
     }
     else
     {
-      ObjectDescription("ObjectDescription", modelURI, objectName);
+        ObjectDescription("ObjectDescription", modelURI, objectName);
     }
 
     if (!currentObject)
     {
-      Debug.LogWarning("No objects found.");
+        Debug.LogWarning("No objects found.");
     }
 #endif
   }
