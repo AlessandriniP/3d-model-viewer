@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, output, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, NgZone, output, viewChild } from '@angular/core';
 import { UnityCommunicatorService } from '../../../services/unity-communicator.service';
 
 @Component({
@@ -15,29 +15,33 @@ export class UnityCanvasComponent implements AfterViewInit {
   readonly unityBuildPath = 'unity-build/unity-build';
 
   private readonly unityCommunicatorService = inject(UnityCommunicatorService);
-  private resizeHandler?: () => void;
+  private readonly ngZone = inject(NgZone);
 
   ngAfterViewInit(): void {
     const unityCanvas = this.canvasRef().nativeElement;
 
-    try {
-      // @ts-ignore
-      createUnityInstance(document.querySelector(`#${this.unityCanvasId}`), {
-        dataUrl: `${this.unityBuildPath}.data`,
-        frameworkUrl: `${this.unityBuildPath}.framework.js`,
-        codeUrl: `${this.unityBuildPath}.wasm`,
-        streamingAssetsUrl: 'StreamingAssets',
-        companyName: 'AlessandriniP',
-        productName: '3d-model-viewer',
-        productVersion: '1.0'
-      }).then((instance: any) => {
-        unityCanvas.style.cursor = 'crosshair';
-        this.unityCommunicatorService.init(instance);
-        this.canvasReady.emit();
-      });
-    }
-    catch {
-      // ignore exceptions
-    }
+    this.ngZone.runOutsideAngular(() => {
+      try {
+        // @ts-ignore
+        createUnityInstance(document.querySelector(`#${this.unityCanvasId}`), {
+          dataUrl: `${this.unityBuildPath}.data`,
+          frameworkUrl: `${this.unityBuildPath}.framework.js`,
+          codeUrl: `${this.unityBuildPath}.wasm`,
+          streamingAssetsUrl: 'StreamingAssets',
+          companyName: 'AlessandriniP',
+          productName: '3d-model-viewer',
+          productVersion: '1.0'
+        }).then((instance: any) => {
+          unityCanvas.style.cursor = 'crosshair';
+          this.ngZone.run(() => {
+            this.unityCommunicatorService.init(instance);
+            this.canvasReady.emit();
+          });
+        });
+      }
+      catch {
+        // ignore exceptions
+      }
+    });
   }
 }
