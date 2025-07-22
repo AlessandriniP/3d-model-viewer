@@ -1,6 +1,9 @@
 {
   "name": "3d-model-viewer",
-  "version": "0.0.0",
+  "productName": "3D Model Viewer",
+  "author": "Philipp Alessandrini",
+  "description": "A 3D Model Viewer application to view different glTF models.",
+  "version": "1.0.0",
   "main": "electron-app.js",
   "scripts": {
     "ng": "ng",
@@ -10,7 +13,8 @@
     "test": "ng test",
     "serve:ssr:3d-model-viewer": "node dist/3d-model-viewer/server/server.mjs",
     "electron": "electron .",
-    "host": "ng serve --host 0.0.0.0"
+    "host": "ng serve --host 0.0.0.0",
+    "package": "electron-builder build"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +42,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "electron": "^35.2.0",
+    "electron-builder": "^26.0.12",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -45,5 +50,13 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.8.3"
+  },
+  "build": {
+    "appId": "com.alessandrinip.3d-model-viewer",
+    "files": [
+      "dist/3d-model-viewer/browser/**/*",
+      "electron-app.js"
+    ],
+    "icon": "public/icon.png"
   }
 }

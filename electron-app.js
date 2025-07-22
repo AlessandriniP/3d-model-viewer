@@ -7,7 +7,7 @@ function createWindow() {
     height: 720,
     minWidth: 400,
     minHeight: 500,
-    icon: basePath + '/favicon.ico',
+    icon: basePath + '/icon.png',
   })
 
   win.removeMenu()
