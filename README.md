@@ -1,8 +1,10 @@
 # 3dModelViewer
 
-**GitHub Pages link:** https://alessandrinip.github.io/3d-model-viewer/
-
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.8.
+
+## Links
+
+- [**GitHub Pages**](https://alessandrinip.github.io/3d-model-viewer/)
 
 ## Development server
 
