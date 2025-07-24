@@ -3,7 +3,7 @@
   "productName": "3D Model Viewer",
   "author": "Philipp Alessandrini",
   "description": "A 3D Model Viewer application to view different glTF models.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "electron-app.js",
   "scripts": {
     "ng": "ng",
