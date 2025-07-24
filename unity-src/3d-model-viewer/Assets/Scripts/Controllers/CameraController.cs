@@ -8,9 +8,9 @@ public class CameraController : MonoBehaviour
   [SerializeField] private Transform _defaultCamPose;
 
   private const float _xRotationRange = 89f;
-  private const float _panSpeed = 5f;
-  private const float _scrollZoomSpeed = 150f;
-  private const float _mouseZoomSpeed = 35f;
+  private const float _panSpeed = 0.05f;
+  private const float _scrollZoomSpeed = 1f;
+  private const float _mouseZoomSpeed = 0.15f;
   private const float _minZoomDist = .001f;
   private const float _maxZoomDist = 200f;
 
@@ -115,8 +115,8 @@ public class CameraController : MonoBehaviour
 
   private void PanCamera(Vector2 axes)
   {
-    var moveRight = axes.x * _panSpeed * Time.deltaTime * -transform.right;
-    var moveUp = axes.y * _panSpeed * Time.deltaTime * -transform.up;
+    var moveRight = axes.x * _panSpeed * -transform.right;
+    var moveUp = axes.y * _panSpeed * -transform.up;
 
     var movement = moveRight + moveUp;
 
@@ -128,7 +128,7 @@ public class CameraController : MonoBehaviour
   {
     var directionToTarget = (_cameraPivot.position - transform.position).normalized;
     var currentDistance = Vector3.Distance(transform.position, _cameraPivot.position);
-    var zoomAmount = axes.y * zoomSpeed * Time.deltaTime;
+    var zoomAmount = axes.y * zoomSpeed;
 
     var targetDistance = currentDistance - zoomAmount;
 
