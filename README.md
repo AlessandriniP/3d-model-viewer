@@ -5,6 +5,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 ## Links
 
 - [**GitHub Pages**](https://alessandrinip.github.io/3d-model-viewer/)
+- [**Releases**](https://github.com/AlessandriniP/3d-model-viewer/releases)
 
 ## Development server
 
